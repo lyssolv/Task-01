@@ -12,7 +12,7 @@ get()                    // returns stored value;
 
 
 
-function BaseClassES5(str) {
+/* function BaseClassES5(str) {
     this.str = str;
     this.plus = function (...str) {
         this.str = [this.str, ...arguments].join('');
@@ -56,7 +56,7 @@ function StringBuilder(str) {
 
 
 let strBuilder = new StringBuilder('Hello');
-console.log(strBuilder.sub(0, 1));
+console.log(strBuilder.sub(0, 1)); */
 
 
 /* // EXAMPLE:
@@ -70,3 +70,66 @@ strBuilder
   .sub(1,1)                                  // 'e';
   .get();                                    // -> 'e'; */
  
+
+//New ver.
+
+function BaseClassES5(str) {
+    this.str = str;
+}
+
+BaseClassES5.prototype.plus = function (...str) {
+    this.str = [this.str, ...arguments].join('');
+    return this;
+}
+
+function StringBuilder(str) {
+    BaseClassES5.call(this, str);
+}
+
+StringBuilder.prototype = Object.create(BaseClassES5.prototype);
+StringBuilder.prototype.constructor = StringBuilder;
+
+StringBuilder.prototype.minus = function(n) {
+    this.str = this.str.slice(0, - n);
+    return this;
+}
+
+StringBuilder.prototype.multiply = function(n) {
+    let str1 = '';
+        if(this.str) {
+            for (let i = 0; i < n; i++) {
+                str1 += this.str;
+            }
+        }
+        return this;
+}
+
+StringBuilder.prototype.divide = function(n) {
+    this.str = this.str.substring(0, Math.floor(this.str.length / n));
+        return this;
+}
+
+StringBuilder.prototype.remove = function(str) {
+    this.str = this.str.split('');
+    this.str = this.str.filter(item => item != str).join('');
+    return this.str;
+}
+
+StringBuilder.prototype.sub = function(from, n) {
+    if(from) {
+        this.str = this.str.slice(from, n + 1); 
+    } else {
+        this.str = this.str.slice(from, n);
+    }
+    return this;
+}
+
+
+StringBuilder.prototype.get = function() {
+    return this.str;
+}
+
+
+
+let strBuilder = new StringBuilder('Hello colleagues');
+console.log(strBuilder.remove('l'));
